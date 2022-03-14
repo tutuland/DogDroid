@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DogDroid</string>
+    <string name="error_state">Something went wrong…\nSwipe down to try again.</string>
+    <string name="force_refresh_message">Are you sure you want to perform a refresh? This will delete all local data, including your favorites.</string>
+    <string name="force_refresh_negative">Cancel</string>
+    <string name="force_refresh_positive">Confirm</string>
+</resources>

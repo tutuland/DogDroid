@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_primary">#FF6D5FFD</color>
+    <color name="brand_primary_dark">#FF7B6FF7</color>
+    <color name="brand_primary_variant">#FF5749D8</color>
+    <color name="brand_secondary">#FFFF9800</color>
+    <color name="brand_secondary_variant">#FFB5700B</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
