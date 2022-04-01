@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.tutuland.dogdroid.R
 import com.tutuland.dogdroid.data.Dog
 import com.tutuland.dogdroid.databinding.DogItemBinding
+
 
 class DogListAdapter(
     private val clickAction: (Dog) -> Unit,

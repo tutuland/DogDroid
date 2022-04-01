@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="dogdroid">
+    package="com.tutuland.dogdroid">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.tutuland.dogdroid.DogDroidApp"
+        android:name="DogDroidApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DogDroid.Splash">
         <activity
-            android:name="com.tutuland.dogdroid.ui.DogListActivity"
+            android:name=".ui.DogListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
