@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -38,10 +40,24 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+            isIncludeAndroidResources = true
+        }
+        animationsDisabled = true
+    }
 }
 
 dependencies {
     kapt(libs.room.compiler)
     implementation(libs.bundles.app)
     testImplementation(libs.bundles.test)
+}
+
+tasks.withType<KotlinCompile>().all {
+    kotlinOptions.freeCompilerArgs += listOf(
+        "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+    )
 }

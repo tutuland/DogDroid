@@ -43,7 +43,7 @@ class DogDroidApp : Application(), KoinComponent {
         single { get<DogRoomDatabase>().dogDao() } // DogDatabase
         single<LocalDogsSource> { LocalDogsSource.FromDatabase(get()) }
         single<RemoteDogsSource> { RemoteDogsSource.FromWorker(get()) }
-        single<DogRepository> { DogRepository.WithLocalCaching(get(), get(), get()) }
+        single<DogRepository> { DogRepository.WithLocalCaching(get(), get()) }
         worker { RetrieveDogsWorker(get(), get(), androidContext(), get()) }
         viewModel { DogListViewModel(get()) }
     }

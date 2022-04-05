@@ -1,10 +1,10 @@
 package com.tutuland.dogdroid.data.local
 
 import app.cash.turbine.test
-import com.tutuland.dogdroid.data.fixDog
-import com.tutuland.dogdroid.data.fixDogEntity
-import com.tutuland.dogdroid.data.fixListOfDogEntities
-import com.tutuland.dogdroid.data.fixListOfDogs
+import com.tutuland.dogdroid.fixDog
+import com.tutuland.dogdroid.fixDogEntity
+import com.tutuland.dogdroid.fixListOfDogEntities
+import com.tutuland.dogdroid.fixListOfDogs
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder

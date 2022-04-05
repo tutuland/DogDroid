@@ -1,7 +1,7 @@
 package com.tutuland.dogdroid.data.remote
 
-import com.tutuland.dogdroid.data.fixBreed
-import com.tutuland.dogdroid.data.fixImageUrl
+import com.tutuland.dogdroid.fixBreed
+import com.tutuland.dogdroid.fixImageUrl
 import io.mockk.MockKAnnotations
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest

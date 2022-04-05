@@ -2,29 +2,23 @@ package com.tutuland.dogdroid.data
 
 import com.tutuland.dogdroid.data.local.LocalDogsSource
 import com.tutuland.dogdroid.data.remote.RemoteDogsSource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 
 interface DogRepository {
-    fun getDogs(): StateFlow<List<Dog>>
+    fun getDogs(): Flow<List<Dog>>
     suspend fun saveDog(dog: Dog)
     suspend fun refreshData()
 
     class WithLocalCaching(
-        private val scope: CoroutineScope,
         private val localSource: LocalDogsSource,
         private val remoteSource: RemoteDogsSource,
-        private val initialList: List<Dog> = listOf(),
     ) : DogRepository {
 
-        override fun getDogs(): StateFlow<List<Dog>> =
+        override fun getDogs(): Flow<List<Dog>> =
             localSource
                 .getDogs()
                 .onEach { requestFromApiIfNeeded(it) }
-                .stateIn(scope, SharingStarted.Lazily, initialList)
 
         override suspend fun saveDog(dog: Dog) {
             localSource.saveDog(dog)

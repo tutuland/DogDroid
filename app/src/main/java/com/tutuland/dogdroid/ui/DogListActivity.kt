@@ -21,7 +21,7 @@ class DogListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setupViews()
         lifecycleScope.launch {
-            viewModel.flowState()
+            viewModel.state
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect(::renderState)
         }

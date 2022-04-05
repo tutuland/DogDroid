@@ -1,5 +1,6 @@
-package com.tutuland.dogdroid.data
+package com.tutuland.dogdroid
 
+import com.tutuland.dogdroid.data.Dog
 import com.tutuland.dogdroid.data.local.DogEntity
 
 const val fixBreed = "akita"
