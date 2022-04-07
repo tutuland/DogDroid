@@ -8,6 +8,7 @@ import com.tutuland.dogdroid.data.local.LocalDogsSource
 import com.tutuland.dogdroid.data.local.makeDogDatabase
 import com.tutuland.dogdroid.data.remote.RemoteDogsSource
 import com.tutuland.dogdroid.data.remote.RetrieveDogsWorker
+import com.tutuland.dogdroid.data.remote.RetrieveDogsWorkerDelegate
 import com.tutuland.dogdroid.data.remote.makeDogApi
 import com.tutuland.dogdroid.ui.DogListViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +48,7 @@ val dogDroidModule = module {
     single<LocalDogsSource> { LocalDogsSource.FromDatabase(get()) }
     single<RemoteDogsSource> { RemoteDogsSource.FromWorker(get()) }
     single<DogRepository> { DogRepository.WithLocalCaching(get(), get()) }
-    worker { RetrieveDogsWorker(get(), get(), androidContext(), get()) }
+    single { RetrieveDogsWorkerDelegate(get(), get()) }
+    worker { RetrieveDogsWorker(get(), androidContext(), get()) }
     viewModel { DogListViewModel(get()) }
 }

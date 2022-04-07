@@ -10,21 +10,29 @@ import com.tutuland.dogdroid.data.local.DogEntity
 private const val TAG = "RetrieveDogsWorker"
 
 class RetrieveDogsWorker(
-    private val api: DogApi,
-    private val database: DogDatabase,
+    private val delegate: RetrieveDogsWorkerDelegate,
     context: Context,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result = try {
+        delegate.doWork()
+        Result.success()
+    } catch (error: Throwable) {
+        Result.failure()
+    }
+}
+
+class RetrieveDogsWorkerDelegate(
+    private val api: DogApi,
+    private val database: DogDatabase,
+) {
+    suspend fun doWork() {
         Log.d(TAG, "Requesting dogs from the api")
         val listOfBreeds = getBreedsFromApi().breeds.orEmpty()
         listOfBreeds
             .asSequence()
             .forEach { createAndSaveDogEntityFor(it) }
         Log.d(TAG, "Saved ${listOfBreeds.size} dogs to the database")
-        Result.success()
-    } catch (error: Exception) {
-        Result.failure()
     }
 
     private suspend fun getBreedsFromApi(): BreedsResult {
