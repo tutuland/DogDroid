@@ -21,6 +21,10 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -31,14 +35,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    testOptions {
-        unitTests.isReturnDefaultValues = true
-    }
-
-    buildFeatures {
-        viewBinding = true
     }
 
     testOptions {
@@ -54,10 +50,12 @@ dependencies {
     kapt(libs.room.compiler)
     implementation(libs.bundles.app)
     testImplementation(libs.bundles.test)
+    androidTestImplementation(libs.bundles.androidTest)
 }
 
 tasks.withType<KotlinCompile>().all {
-    kotlinOptions.freeCompilerArgs += listOf(
-        "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-    )
+    kotlinOptions {
+        jvmTarget = "11"
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+    }
 }

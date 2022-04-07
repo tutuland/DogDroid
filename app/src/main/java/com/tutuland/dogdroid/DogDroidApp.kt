@@ -17,11 +17,10 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.androidx.workmanager.koin.workManagerFactory
-import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
-class DogDroidApp : Application(), KoinComponent {
+class DogDroidApp : Application() {
     private lateinit var scope: CoroutineScope
 
     override fun onCreate() {
@@ -31,20 +30,23 @@ class DogDroidApp : Application(), KoinComponent {
             androidLogger()
             androidContext(this@DogDroidApp)
             workManagerFactory()
-            modules(appModule)
+            modules(dogDroidModule, appModule)
         }
     }
 
     private val appModule = module {
         factory { scope }
-        factory { WorkManager.getInstance(get()) }
-        single { makeDogApi() }
-        single { makeDogDatabase(get()) }
-        single { get<DogRoomDatabase>().dogDao() } // DogDatabase
-        single<LocalDogsSource> { LocalDogsSource.FromDatabase(get()) }
-        single<RemoteDogsSource> { RemoteDogsSource.FromWorker(get()) }
-        single<DogRepository> { DogRepository.WithLocalCaching(get(), get()) }
-        worker { RetrieveDogsWorker(get(), get(), androidContext(), get()) }
-        viewModel { DogListViewModel(get()) }
     }
+}
+
+val dogDroidModule = module {
+    factory { WorkManager.getInstance(get()) }
+    single { makeDogApi() }
+    single { makeDogDatabase(get()) }
+    single { get<DogRoomDatabase>().dogDao() } // DogDatabase
+    single<LocalDogsSource> { LocalDogsSource.FromDatabase(get()) }
+    single<RemoteDogsSource> { RemoteDogsSource.FromWorker(get()) }
+    single<DogRepository> { DogRepository.WithLocalCaching(get(), get()) }
+    worker { RetrieveDogsWorker(get(), get(), androidContext(), get()) }
+    viewModel { DogListViewModel(get()) }
 }

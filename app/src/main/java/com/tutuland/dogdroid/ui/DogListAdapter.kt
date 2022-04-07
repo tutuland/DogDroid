@@ -32,6 +32,7 @@ class DogListAdapter(
             binding.dogBreed.text = model.breed
             binding.dogImage.load(model.imageUrl)
             binding.dogItem.setOnClickListener { clickAction(model) }
+            binding.dogItem.tag = favoriteDrawable
         }
     }
 
