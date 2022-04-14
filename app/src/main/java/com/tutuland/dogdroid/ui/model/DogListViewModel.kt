@@ -1,4 +1,4 @@
-package com.tutuland.dogdroid.ui
+package com.tutuland.dogdroid.ui.model
 
 import android.util.Log
 import androidx.annotation.VisibleForTesting
@@ -59,9 +59,3 @@ class DogListViewModel(
         _state.value = _state.value.copy(dogList = dogList, isLoading = dogList.isEmpty(), showError = false)
     }
 }
-
-data class DogListViewState(
-    var dogList: List<Dog> = listOf(),
-    val isLoading: Boolean = false,
-    val showError: Boolean = false,
-)

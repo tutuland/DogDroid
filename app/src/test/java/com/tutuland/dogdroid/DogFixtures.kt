@@ -1,9 +1,9 @@
 package com.tutuland.dogdroid
 
 import com.tutuland.dogdroid.data.Dog
-import com.tutuland.dogdroid.data.local.DogEntity
-import com.tutuland.dogdroid.data.remote.BreedsResult
-import com.tutuland.dogdroid.data.remote.ImageResult
+import com.tutuland.dogdroid.data.source.local.DogEntity
+import com.tutuland.dogdroid.data.source.remote.BreedsResult
+import com.tutuland.dogdroid.data.source.remote.ImageResult
 
 const val fixBreed = "akita"
 const val fixImageUrl = "https://images.dog.ceo/breeds/akita/Akita_inu_blanc.jpg"

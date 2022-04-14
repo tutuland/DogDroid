@@ -1,4 +1,4 @@
-package com.tutuland.dogdroid.ui
+package com.tutuland.dogdroid.ui.model
 
 import android.app.Application
 import androidx.test.ext.junit.runners.AndroidJUnit4

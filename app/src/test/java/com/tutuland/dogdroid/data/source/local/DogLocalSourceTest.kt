@@ -1,4 +1,4 @@
-package com.tutuland.dogdroid.data.local
+package com.tutuland.dogdroid.data.source.local
 
 import app.cash.turbine.test
 import com.tutuland.dogdroid.fixDog
@@ -14,19 +14,17 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 
-@ExperimentalCoroutinesApi
-class LocalDogsSourceTest {
+class DogLocalSourceTest {
     @MockK lateinit var database: DogDatabase
-    lateinit var source: LocalDogsSource
+    lateinit var source: DogLocalSource
 
     @BeforeTest
     fun setup() {
         MockKAnnotations.init(this, relaxed = true)
-        source = LocalDogsSource.FromDatabase(database)
+        source = DogLocalSource.FromDatabase(database)
     }
 
     @Test

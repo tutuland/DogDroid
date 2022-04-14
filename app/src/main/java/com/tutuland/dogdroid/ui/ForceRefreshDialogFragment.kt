@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.tutuland.dogdroid.R
+import com.tutuland.dogdroid.ui.model.DogListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ForceRefreshDialogFragment : DialogFragment() {

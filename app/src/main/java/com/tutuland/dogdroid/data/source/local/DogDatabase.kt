@@ -1,4 +1,4 @@
-package com.tutuland.dogdroid.data.local
+package com.tutuland.dogdroid.data.source.local
 
 import android.content.Context
 import androidx.room.Dao

@@ -3,14 +3,14 @@ package com.tutuland.dogdroid
 import android.app.Application
 import androidx.work.WorkManager
 import com.tutuland.dogdroid.data.DogRepository
-import com.tutuland.dogdroid.data.local.DogRoomDatabase
-import com.tutuland.dogdroid.data.local.LocalDogsSource
-import com.tutuland.dogdroid.data.local.makeDogDatabase
-import com.tutuland.dogdroid.data.remote.RemoteDogsSource
-import com.tutuland.dogdroid.data.remote.RetrieveDogsWorker
-import com.tutuland.dogdroid.data.remote.RetrieveDogsWorkerDelegate
-import com.tutuland.dogdroid.data.remote.makeDogApi
-import com.tutuland.dogdroid.ui.DogListViewModel
+import com.tutuland.dogdroid.data.service.RetrieveDogsService
+import com.tutuland.dogdroid.data.service.RetrieveDogsWorker
+import com.tutuland.dogdroid.data.source.local.DogLocalSource
+import com.tutuland.dogdroid.data.source.local.DogRoomDatabase
+import com.tutuland.dogdroid.data.source.local.makeDogDatabase
+import com.tutuland.dogdroid.data.source.remote.DogRemoteSource
+import com.tutuland.dogdroid.data.source.remote.makeDogApi
+import com.tutuland.dogdroid.ui.model.DogListViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import org.koin.android.ext.koin.androidContext
@@ -42,13 +42,13 @@ class DogDroidApp : Application() {
 
 val dogDroidModule = module {
     factory { WorkManager.getInstance(get()) }
-    single { makeDogApi() }
+    factory { makeDogApi() }
     single { makeDogDatabase(get()) }
-    single { get<DogRoomDatabase>().dogDao() } // DogDatabase
-    single<LocalDogsSource> { LocalDogsSource.FromDatabase(get()) }
-    single<RemoteDogsSource> { RemoteDogsSource.FromWorker(get()) }
-    single<DogRepository> { DogRepository.WithLocalCaching(get(), get()) }
-    single { RetrieveDogsWorkerDelegate(get(), get()) }
+    factory { get<DogRoomDatabase>().dogDao() } // DogDatabase
+    factory<DogLocalSource> { DogLocalSource.FromDatabase(get()) }
+    factory<DogRemoteSource> { DogRemoteSource.FromApi(get()) }
+    factory<DogRepository> { DogRepository.WithLocalCaching(get(), get(), get()) }
+    factory<RetrieveDogsService> { RetrieveDogsService.FromWorker(get()) }
     worker { RetrieveDogsWorker(get(), androidContext(), get()) }
     viewModel { DogListViewModel(get()) }
 }

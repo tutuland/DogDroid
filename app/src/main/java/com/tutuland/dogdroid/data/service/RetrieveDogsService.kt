@@ -1,19 +1,18 @@
-package com.tutuland.dogdroid.data.remote
+package com.tutuland.dogdroid.data.service
 
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 
-
 private const val FETCH_DOGS_TASK = "FetchDogsTask"
 
-interface RemoteDogsSource {
+interface RetrieveDogsService {
     fun requestDogsRemotely()
     fun cancelRequestingDogs()
 
     class FromWorker(
         private val workManager: WorkManager
-    ) : RemoteDogsSource {
+    ) : RetrieveDogsService {
         override fun requestDogsRemotely() {
             val fetchDogsRequest = OneTimeWorkRequestBuilder<RetrieveDogsWorker>()
             workManager.enqueueUniqueWork(

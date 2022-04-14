@@ -1,4 +1,5 @@
 # DogDroid
+
 An app that uses [dog-api](https://dog.ceo/dog-api/documentation/) to fetch information about dog breeds and display
 them in cards.
 
@@ -10,7 +11,6 @@ This was originally a code challenge, but evolved into a learning exercise on An
 - Repository pattern was used to abstract data sources
 - Retrofit was used to fetch api data from the network
 - Room was used to persist retrieved data and is the repository's single source of truth
-- WorkManager was used to ensure fetching data and persisting it on locally was completed even after app termination
 
 ## UI layer
 
@@ -23,4 +23,5 @@ This was originally a code challenge, but evolved into a learning exercise on An
   the db)
 
 ## Application layer
+
 - Initializes Koin as a Dependency Injection provider

@@ -9,6 +9,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.tutuland.dogdroid.databinding.DogListActivityBinding
+import com.tutuland.dogdroid.ui.model.DogListViewModel
+import com.tutuland.dogdroid.ui.model.DogListViewState
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

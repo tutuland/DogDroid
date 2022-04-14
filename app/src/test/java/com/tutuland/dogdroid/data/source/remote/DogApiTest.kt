@@ -1,4 +1,4 @@
-package com.tutuland.dogdroid.data.remote
+package com.tutuland.dogdroid.data.source.remote
 
 import com.tutuland.dogdroid.fixBreed
 import com.tutuland.dogdroid.fixImageUrl
@@ -9,13 +9,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import retrofit2.HttpException
 
-@ExperimentalCoroutinesApi
 class DogApiTest {
     private lateinit var server: MockWebServer
     private lateinit var api: DogApi

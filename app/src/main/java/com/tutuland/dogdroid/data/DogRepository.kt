@@ -1,9 +1,12 @@
 package com.tutuland.dogdroid.data
 
-import com.tutuland.dogdroid.data.local.LocalDogsSource
-import com.tutuland.dogdroid.data.remote.RemoteDogsSource
+import com.tutuland.dogdroid.data.source.local.DogLocalSource
+import com.tutuland.dogdroid.data.source.remote.DogRemoteSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 interface DogRepository {
     fun getDogs(): Flow<List<Dog>>
@@ -11,32 +14,33 @@ interface DogRepository {
     suspend fun refreshData()
 
     class WithLocalCaching(
-        private val localSource: LocalDogsSource,
-        private val remoteSource: RemoteDogsSource,
+        private val localSource: DogLocalSource,
+        private val remoteSource: DogRemoteSource,
+        private val externalScope: CoroutineScope,
     ) : DogRepository {
+        private var refreshJob: Job? = null
 
         override fun getDogs(): Flow<List<Dog>> =
-            localSource
-                .getDogs()
-                .onEach { requestFromApiIfNeeded(it) }
+            localSource.getDogs()
+                .onEach(::checkIfRefreshIsNeeded)
 
-        override suspend fun saveDog(dog: Dog) {
+        override suspend fun saveDog(dog: Dog) =
             localSource.saveDog(dog)
-        }
 
         override suspend fun refreshData() {
-            remoteSource.cancelRequestingDogs()
-            localSource.deleteDogs()
+            refreshJob?.cancel()
+            refreshJob = externalScope.launch {
+                localSource.deleteDogs()
+                fetchDogsAndSaveThem()
+            }
         }
 
-        private fun requestFromApiIfNeeded(list: List<Dog>) {
-            if (list.isEmpty()) remoteSource.requestDogsRemotely()
+        private suspend inline fun fetchDogsAndSaveThem() =
+            remoteSource.getDogs()
+                .collect(::saveDog)
+
+        private suspend inline fun checkIfRefreshIsNeeded(list: List<Dog>) {
+            if (list.isEmpty()) refreshData()
         }
     }
 }
-
-data class Dog(
-    val breed: String,
-    val imageUrl: String,
-    val isFavorite: Boolean,
-)
