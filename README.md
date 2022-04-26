@@ -10,7 +10,14 @@ This was originally a code challenge, but evolved into a learning exercise on An
 
 - Repository pattern was used to abstract data sources
 - Retrofit was used to fetch api data from the network
-- Room was used to persist retrieved data and is the repository's single source of truth
+- Room was used to persist retrieved breed information and is the repository's single source of truth
+- DataStore was used to persist user preferences
+
+## Domain layer
+
+- Use cases unify both information from breeds retrieved from the api and stored locally and user preferences 
+  (favorite breeds, for instance) in a single `Dog` model.
+- A use case is as also exposed to refresh breed information stored
 
 ## UI layer
 

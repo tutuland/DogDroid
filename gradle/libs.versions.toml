@@ -14,6 +14,7 @@ android-tools = "7.0.4" # https://developer.android.com/studio/releases/gradle-p
 android-material = "1.5.0" # https://maven.google.com/web/index.html?q=com.google.android.material#com.google.android.material:material
 androidx-appcompat = "1.4.1" # https://maven.google.com/web/index.html?q=appCompat#androidx.appcompat:appcompat
 androidx-constraintlayout = "2.1.3" # https://maven.google.com/web/index.html?q=constraintlayout#androidx.constraintlayout:constraintlayout
+androidx-datastore = "1.0.0" # https://maven.google.com/web/index.html?q=datastore#androidx.datastore:datastore-preferences
 androidx-lifecycle-runtime-ktx = "2.4.0" # https://maven.google.com/web/index.html?q=lifecycle-runtime-ktx#androidx.lifecycle:lifecycle-runtime-ktx
 androidx-swiperefreshlayout = "1.1.0" # https://maven.google.com/web/index.html?q=refresh#androidx.swiperefreshlayout:swiperefreshlayout
 androidx-work = "2.7.1" # https://developer.android.com/jetpack/androidx/releases/work
@@ -41,6 +42,7 @@ plugin-android-tools = { module = "com.android.tools.build:gradle", version.ref 
 android-material = { module = "com.google.android.material:material", version.ref = "android-material" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
+androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle-runtime-ktx" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "androidx-swiperefreshlayout" }
 androidx-work-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
@@ -76,6 +78,7 @@ app = [
     "android-material",
     "androidx-appcompat",
     "androidx-constraintlayout",
+    "androidx-datastore",
     "androidx-lifecycle-runtime-ktx",
     "androidx-swiperefreshlayout",
     "androidx-work-ktx",

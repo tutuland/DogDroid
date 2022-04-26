@@ -1,4 +1,4 @@
-package com.tutuland.dogdroid.data.source.remote
+package com.tutuland.dogdroid.data.info.remote
 
 import com.tutuland.dogdroid.fixBreed
 import com.tutuland.dogdroid.fixImageUrl
@@ -14,15 +14,15 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import retrofit2.HttpException
 
-class DogApiTest {
+class DogInfoApiTest {
     private lateinit var server: MockWebServer
-    private lateinit var api: DogApi
+    private lateinit var api: DogInfoApi
 
     @BeforeTest
     fun setup() {
         MockKAnnotations.init(this, relaxed = true)
         server = MockWebServer()
-        api = makeDogApi(server.url("/"))
+        api = makeDogInfoApi(server.url("/"))
     }
 
     @AfterTest

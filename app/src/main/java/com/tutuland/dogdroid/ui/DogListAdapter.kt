@@ -8,9 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.tutuland.dogdroid.R
-import com.tutuland.dogdroid.data.Dog
 import com.tutuland.dogdroid.databinding.DogItemBinding
-
+import com.tutuland.dogdroid.domain.Dog
 
 class DogListAdapter(
     private val clickAction: (Dog) -> Unit,
@@ -27,23 +26,24 @@ class DogListAdapter(
         private val binding: DogItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         infix fun bind(model: Dog) {
-            val favoriteDrawable = if (model.isFavorite) R.drawable.ic_favorite_true else R.drawable.ic_favorite_false
+            val favoriteDrawable = if (model.preferences.isFavorite) R.drawable.ic_favorite_true else R.drawable.ic_favorite_false
             binding.dogBreed.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, favoriteDrawable, 0)
-            binding.dogBreed.text = model.breed
-            binding.dogImage.load(model.imageUrl)
+            binding.dogBreed.text = model.info.breed
+            binding.dogImage.load(model.info.imageUrl)
             binding.dogItem.setOnClickListener { clickAction(model) }
             binding.dogItem.tag = favoriteDrawable
         }
     }
 
     private class DogDiff : DiffUtil.ItemCallback<Dog>() {
-        override fun areItemsTheSame(oldItem: Dog, newItem: Dog) = oldItem.breed == newItem.breed
+        override fun areItemsTheSame(oldItem: Dog, newItem: Dog) = oldItem.info.breed == newItem.info.breed
         override fun areContentsTheSame(oldItem: Dog, newItem: Dog) = oldItem == newItem
         override fun getChangePayload(oldItem: Dog, newItem: Dog): Any {
             val diff = Bundle()
-            if (oldItem.breed != newItem.breed) diff.putString("breed", newItem.breed)
-            if (oldItem.imageUrl != newItem.imageUrl) diff.putString("imageUrl", newItem.imageUrl)
-            if (oldItem.isFavorite != newItem.isFavorite) diff.putBoolean("isFavorite", newItem.isFavorite)
+            if (oldItem.info.breed != newItem.info.breed) diff.putString("breed", newItem.info.breed)
+            if (oldItem.info.imageUrl != newItem.info.imageUrl) diff.putString("imageUrl", newItem.info.imageUrl)
+            if (oldItem.preferences.isFavorite != newItem.preferences.isFavorite)
+                diff.putBoolean("isFavorite", newItem.preferences.isFavorite)
             return diff
         }
     }

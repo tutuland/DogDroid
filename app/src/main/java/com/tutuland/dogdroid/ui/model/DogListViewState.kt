@@ -1,6 +1,6 @@
 package com.tutuland.dogdroid.ui.model
 
-import com.tutuland.dogdroid.data.Dog
+import com.tutuland.dogdroid.domain.Dog
 
 data class DogListViewState(
     val dogList: List<Dog> = listOf(),

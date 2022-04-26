@@ -1,9 +1,9 @@
-package com.tutuland.dogdroid.data.source.remote
+package com.tutuland.dogdroid.data.info.remote
 
 import app.cash.turbine.test
 import com.tutuland.dogdroid.fixBreed
 import com.tutuland.dogdroid.fixBreedsResult
-import com.tutuland.dogdroid.fixDog
+import com.tutuland.dogdroid.fixDogInfo
 import com.tutuland.dogdroid.fixImageResult
 import com.tutuland.dogdroid.fixInvalidBreedsResult
 import io.mockk.MockKAnnotations
@@ -17,9 +17,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 
-class DogRemoteSourceTest {
-    @MockK lateinit var api: DogApi
-    lateinit var source: DogRemoteSource
+class DogInfoRemoteSourceTest {
+    @MockK lateinit var api: DogInfoApi
+    lateinit var source: DogInfoRemoteSource
 
     private object GetBreedsException : Exception()
     private object GetImageException : Exception()
@@ -27,7 +27,7 @@ class DogRemoteSourceTest {
     @BeforeTest
     fun setup() {
         MockKAnnotations.init(this, relaxed = true)
-        source = DogRemoteSource.FromApi(api)
+        source = DogInfoRemoteSource.FromApi(api)
     }
 
     @Test
@@ -77,9 +77,9 @@ class DogRemoteSourceTest {
         coEvery { api.getImageFor(fixBreed) } returns fixImageResult
 
         source.getDogs().test {
-            assertEquals(fixDog, awaitItem())
-            assertEquals(fixDog, awaitItem())
-            assertEquals(fixDog, awaitItem())
+            assertEquals(fixDogInfo, awaitItem())
+            assertEquals(fixDogInfo, awaitItem())
+            assertEquals(fixDogInfo, awaitItem())
             awaitComplete()
         }
 

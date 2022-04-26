@@ -45,13 +45,14 @@ class DogListActivityTest : KoinTest {
 
     private val testModule = module {
         factory { scope }
-        single { fakeRepository }
+        single { fakeInfoRepository }
+        single { fakePrefsRepository }
     }
 
     @Before
     fun setup() {
         stopKoin()
-        initFakeRepository()
+        initFakeRepositories(scope)
         startKoin {
             androidLogger()
             androidContext(context)
@@ -66,7 +67,7 @@ class DogListActivityTest : KoinTest {
 
     @Test
     fun if_repository_returns_empty_list_loading_should_be_visible() {
-        fakeRepositoryMap.clear()
+        fakeInfoRepositoryMap.clear()
         scenario = ActivityScenario.launch(intent)
 
         onView(withId(R.id.swipe_refresh))
@@ -75,7 +76,7 @@ class DogListActivityTest : KoinTest {
 
     @Test
     fun if_repository_throws_error_state_be_visible() {
-        fakeRepositoryReturnsError = true
+        fakeInfoRepositoryReturnsError = true
         scenario = ActivityScenario.launch(intent)
 
         onView(withId(R.id.error_state))

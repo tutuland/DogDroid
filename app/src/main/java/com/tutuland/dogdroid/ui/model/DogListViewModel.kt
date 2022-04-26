@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tutuland.dogdroid.data.Dog
-import com.tutuland.dogdroid.data.DogRepository
+import com.tutuland.dogdroid.domain.Dog
+import com.tutuland.dogdroid.domain.GetDogsUseCase
+import com.tutuland.dogdroid.domain.RefreshDataUseCase
+import com.tutuland.dogdroid.domain.SaveDogUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +18,9 @@ import kotlinx.coroutines.launch
 private const val TAG = "DogListViewModel"
 
 class DogListViewModel(
-    private val repository: DogRepository
+    private val getDogs: GetDogsUseCase,
+    private val saveDog: SaveDogUseCase,
+    private val refresh: RefreshDataUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(DogListViewState())
     val state: StateFlow<DogListViewState> get() = _state.asStateFlow()
@@ -28,18 +32,19 @@ class DogListViewModel(
 
     fun refreshData() {
         Log.d(TAG, "refreshData")
-        viewModelScope.launch { repository.refreshData() }
+        viewModelScope.launch { refresh() }
     }
 
     fun toggleFavorite(dog: Dog) {
-        val toggledDog = dog.copy(isFavorite = dog.isFavorite.not())
-        Log.d(TAG, "Set favorite on ${toggledDog.breed} to ${toggledDog.isFavorite}")
-        viewModelScope.launch { repository.saveDog(toggledDog) }
+        val toggledPrefs = dog.preferences.copy(isFavorite = dog.preferences.isFavorite.not())
+        val toggledDog = dog.copy(preferences = toggledPrefs)
+        Log.d(TAG, "Set favorite on ${toggledDog.info.breed} to ${toggledPrefs.isFavorite}")
+        viewModelScope.launch { saveDog(toggledDog) }
     }
 
     @VisibleForTesting
     suspend fun fetchDogs() {
-        repository.getDogs()
+        getDogs()
             .onStart { fetchingStarted() }
             .catch { errorReceived(it) }
             .collect { dogListReceived(it) }

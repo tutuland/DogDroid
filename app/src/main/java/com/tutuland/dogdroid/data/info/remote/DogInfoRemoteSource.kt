@@ -1,20 +1,20 @@
-package com.tutuland.dogdroid.data.source.remote
+package com.tutuland.dogdroid.data.info.remote
 
 import android.util.Log
-import com.tutuland.dogdroid.data.Dog
+import com.tutuland.dogdroid.data.info.DogInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 
 private const val TAG = "DogRemoteSource"
 
-interface DogRemoteSource {
-    fun getDogs(): Flow<Dog>
+interface DogInfoRemoteSource {
+    fun getDogs(): Flow<DogInfo>
 
     class FromApi(
-        private val api: DogApi,
-    ) : DogRemoteSource {
-        override fun getDogs(): Flow<Dog> = flow {
+        private val api: DogInfoApi,
+    ) : DogInfoRemoteSource {
+        override fun getDogs(): Flow<DogInfo> = flow {
             Log.d(TAG, "Requesting dogs from the api")
             val listOfBreeds = getBreedsFromApi()
             listOfBreeds
@@ -29,12 +29,11 @@ interface DogRemoteSource {
             return breedsResult.breeds.orEmpty()
         }
 
-        private suspend fun FlowCollector<Dog>.fetchImageAndEmitDog(breed: String) {
+        private suspend fun FlowCollector<DogInfo>.fetchImageAndEmitDog(breed: String) {
             val imageResult = api.getImageFor(breed)
-            val dog = Dog(
+            val dog = DogInfo(
                 breed = breed,
                 imageUrl = imageResult.imageUrl,
-                isFavorite = false,
             )
             emit(dog)
         }

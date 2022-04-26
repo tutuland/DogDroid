@@ -1,4 +1,4 @@
-package com.tutuland.dogdroid.data.source.remote
+package com.tutuland.dogdroid.data.info.remote
 
 import com.google.gson.annotations.SerializedName
 import okhttp3.HttpUrl
@@ -8,13 +8,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-fun makeDogApi(baseUrl: HttpUrl = defaultUrl): DogApi = Retrofit.Builder()
+fun makeDogInfoApi(baseUrl: HttpUrl = defaultUrl): DogInfoApi = Retrofit.Builder()
     .baseUrl(baseUrl)
     .addConverterFactory(GsonConverterFactory.create())
     .build()
-    .create(DogApi::class.java)
+    .create(DogInfoApi::class.java)
 
-interface DogApi {
+interface DogInfoApi {
     @GET("breeds/list")
     suspend fun getBreeds(): BreedsResult
 

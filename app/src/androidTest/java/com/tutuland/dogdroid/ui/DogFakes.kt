@@ -1,86 +1,102 @@
 package com.tutuland.dogdroid.ui
 
-import com.tutuland.dogdroid.data.Dog
-import com.tutuland.dogdroid.data.DogRepository
+import com.tutuland.dogdroid.data.info.DogInfo
+import com.tutuland.dogdroid.data.info.DogInfoRepository
+import com.tutuland.dogdroid.data.preferences.DogPreferences
+import com.tutuland.dogdroid.data.preferences.DogPreferencesRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
-var fakeRepositoryReturnsError = false
-var fakeRepositoryMap = mutableMapOf<String, Dog>()
+var fakeReposScope: CoroutineScope? = null
+var fakeInfoRepositoryReturnsError = false
+val fakeInfoRepositoryMap = mutableMapOf<String, DogInfo>()
+val fakePrefsRepositoryMap = mutableMapOf<String, DogPreferences>()
 
-fun initFakeRepository() {
-    fakeRepositoryReturnsError = false
-    fakeRepositoryMap = mutableMapOf(
-        "akita" to Dog(
+fun initFakeRepositories(scope: CoroutineScope) {
+    fakeReposScope = scope
+    fakeInfoRepositoryReturnsError = false
+    val info = listOf(
+        "akita" to DogInfo(
             breed = "akita",
             imageUrl = "https://images.dog.ceo/breeds/akita/Akita_inu_blanc.jpg",
-            isFavorite = false,
         ),
-        "corgi" to Dog(
+        "corgi" to DogInfo(
             breed = "corgi",
             imageUrl = "https://images.dog.ceo/breeds/corgi-cardigan/n02113186_10505.jpg",
-            isFavorite = false,
         ),
-        "dalmatian" to Dog(
+        "dalmatian" to DogInfo(
             breed = "dalmatian",
             imageUrl = "https://images.dog.ceo/breeds/dalmatian/cooper1.jpg",
-            isFavorite = false,
         ),
-        "doberman" to Dog(
+        "doberman" to DogInfo(
             breed = "doberman",
             imageUrl = "https://images.dog.ceo/breeds/doberman/n02107142_10070.jpg",
-            isFavorite = false,
         ),
-        "germanshepherd" to Dog(
+        "germanshepherd" to DogInfo(
             breed = "labrador",
             imageUrl = "https://images.dog.ceo/breeds/germanshepherd/Bagira_site.jpg",
-            isFavorite = false,
         ),
-        "husky" to Dog(
+        "husky" to DogInfo(
             breed = "husky",
             imageUrl = "https://images.dog.ceo/breeds/husky/n02110185_10047.jpg",
-            isFavorite = false,
         ),
-        "labrador" to Dog(
+        "labrador" to DogInfo(
             breed = "labrador",
             imageUrl = "https://images.dog.ceo/breeds/labrador/IMG_4709.jpg",
-            isFavorite = false,
         ),
-        "poodle" to Dog(
+        "poodle" to DogInfo(
             breed = "poodle",
             imageUrl = "https://images.dog.ceo/breeds/poodle-miniature/n02113712_10433.jpghttps://images.dog.ceo/breeds/doberman/n02107142_10070.jpg",
-            isFavorite = false,
         ),
-        "pug" to Dog(
+        "pug" to DogInfo(
             breed = "pug",
             imageUrl = "https://images.dog.ceo/breeds/pug/IMG_8459.jpeg",
-            isFavorite = false,
         ),
     )
+    fakeInfoRepositoryMap.clear()
+    fakeInfoRepositoryMap.putAll(info)
+
+    val prefs = fakeInfoRepositoryMap.map { it.key to DogPreferences(isFavorite = false) }
+    fakePrefsRepositoryMap.clear()
+    fakePrefsRepositoryMap.putAll(prefs)
 }
 
 const val firstDogBreed = "akita"
 const val lastDogBreed = "pug"
 
-object FakeRepositoryException : Exception("FakeRepositoryException")
+object FakeInfoRepositoryException : Exception("FakeInfoRepositoryException")
 
-val fakeRepository = object : DogRepository {
-    val state = MutableStateFlow(fakeRepositoryMap.values.toList())
+val fakeInfoRepository = object : DogInfoRepository {
+    val dogsFlow = MutableSharedFlow<List<DogInfo>>(replay = 1)
 
-    override fun getDogs(): Flow<List<Dog>> {
-        if (fakeRepositoryReturnsError) return flow { throw FakeRepositoryException }
-        state.value = fakeRepositoryMap.values.toList()
-        return state
+    override fun getDogs(): Flow<List<DogInfo>> {
+        if (fakeInfoRepositoryReturnsError) return flow { throw FakeInfoRepositoryException }
+        fakeReposScope?.launch { dogsFlow.emit(fakeInfoRepositoryMap.values.toList()) }
+        return dogsFlow
     }
 
-    override suspend fun saveDog(dog: Dog) {
-        fakeRepositoryMap[dog.breed] = dog
-        state.value = fakeRepositoryMap.values.toList()
+    override suspend fun saveDog(dog: DogInfo) {
+        fakeInfoRepositoryMap[dog.breed] = dog
+        dogsFlow.emit(fakeInfoRepositoryMap.values.toList())
     }
 
     override suspend fun refreshData() {
-        fakeRepositoryMap.clear()
-        state.value = emptyList()
+        fakeInfoRepositoryMap.clear()
+        dogsFlow.emit(emptyList())
+    }
+}
+
+val fakePrefsRepository = object : DogPreferencesRepository {
+    override suspend fun getPreferencesFor(breed: String): DogPreferences {
+        val pref = fakePrefsRepositoryMap[breed] ?: DogPreferences(isFavorite = false)
+        fakePrefsRepositoryMap[breed] = pref
+        return pref
+    }
+
+    override suspend fun setPreferencesFor(breed: String, preferences: DogPreferences) {
+        fakePrefsRepositoryMap[breed] = preferences
     }
 }

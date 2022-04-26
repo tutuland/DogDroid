@@ -1,10 +1,9 @@
-package com.tutuland.dogdroid.data.source.local
+package com.tutuland.dogdroid.data.info.local
 
 import app.cash.turbine.test
-import com.tutuland.dogdroid.fixDog
-import com.tutuland.dogdroid.fixDogEntity
+import com.tutuland.dogdroid.fixDogInfo
 import com.tutuland.dogdroid.fixListOfDogEntities
-import com.tutuland.dogdroid.fixListOfDogs
+import com.tutuland.dogdroid.fixListOfDogInfo
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
@@ -17,14 +16,14 @@ import kotlin.test.assertFailsWith
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 
-class DogLocalSourceTest {
-    @MockK lateinit var database: DogDatabase
-    lateinit var source: DogLocalSource
+class DogInfoLocalSourceTest {
+    @MockK lateinit var database: DogInfoDatabase
+    lateinit var source: DogInfoLocalSource
 
     @BeforeTest
     fun setup() {
         MockKAnnotations.init(this, relaxed = true)
-        source = DogLocalSource.FromDatabase(database)
+        source = DogInfoLocalSource.FromDatabase(database)
     }
 
     @Test
@@ -44,7 +43,7 @@ class DogLocalSourceTest {
         coEvery { database.getDogs() } returns flowOf(fixListOfDogEntities)
 
         source.getDogs().test {
-            assertEquals(fixListOfDogs, awaitItem())
+            assertEquals(fixListOfDogInfo, awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
 
@@ -71,10 +70,10 @@ class DogLocalSourceTest {
 
     @Test
     fun `when saveDog called, map to entity and delegate to database`() = runTest {
-        source.saveDog(fixDog)
+        source.saveDog(fixDogInfo)
 
         coVerifyOrder {
-            database.saveDogs(fixDogEntity)
+            database.saveDogs(any())
         }
         confirmVerified(database)
     }

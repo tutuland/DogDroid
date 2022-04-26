@@ -1,15 +1,22 @@
 package com.tutuland.dogdroid
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.work.WorkManager
-import com.tutuland.dogdroid.data.DogRepository
-import com.tutuland.dogdroid.data.service.RetrieveDogsService
-import com.tutuland.dogdroid.data.service.RetrieveDogsWorker
-import com.tutuland.dogdroid.data.source.local.DogLocalSource
-import com.tutuland.dogdroid.data.source.local.DogRoomDatabase
-import com.tutuland.dogdroid.data.source.local.makeDogDatabase
-import com.tutuland.dogdroid.data.source.remote.DogRemoteSource
-import com.tutuland.dogdroid.data.source.remote.makeDogApi
+import com.tutuland.dogdroid.data.info.DogInfoRepository
+import com.tutuland.dogdroid.data.info.local.DogInfoLocalSource
+import com.tutuland.dogdroid.data.info.local.DogRoomDatabase
+import com.tutuland.dogdroid.data.info.local.makeDogInfoDatabase
+import com.tutuland.dogdroid.data.info.remote.DogInfoRemoteSource
+import com.tutuland.dogdroid.data.info.remote.makeDogInfoApi
+import com.tutuland.dogdroid.data.preferences.DogPreferencesRepository
+import com.tutuland.dogdroid.domain.GetDogsUseCase
+import com.tutuland.dogdroid.domain.RefreshDataUseCase
+import com.tutuland.dogdroid.domain.SaveDogUseCase
+import com.tutuland.dogdroid.domain.service.RetrieveDogsService
+import com.tutuland.dogdroid.domain.service.RetrieveDogsWorker
 import com.tutuland.dogdroid.ui.model.DogListViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -41,14 +48,28 @@ class DogDroidApp : Application() {
 }
 
 val dogDroidModule = module {
-    factory { WorkManager.getInstance(get()) }
-    factory { makeDogApi() }
-    single { makeDogDatabase(get()) }
+    /* data layer - info */
+    factory { makeDogInfoApi() }
+    single { makeDogInfoDatabase(get()) }
     factory { get<DogRoomDatabase>().dogDao() } // DogDatabase
-    factory<DogLocalSource> { DogLocalSource.FromDatabase(get()) }
-    factory<DogRemoteSource> { DogRemoteSource.FromApi(get()) }
-    factory<DogRepository> { DogRepository.WithLocalCaching(get(), get(), get()) }
+    factory<DogInfoLocalSource> { DogInfoLocalSource.FromDatabase(get()) }
+    factory<DogInfoRemoteSource> { DogInfoRemoteSource.FromApi(get()) }
+    factory<DogInfoRepository> { DogInfoRepository.WithLocalCaching(get(), get(), get()) }
+
+    /* data layer - preferences */
+    single { PreferenceDataStoreFactory.create { get<Context>().preferencesDataStoreFile("DogPreferences") } }
+    factory<DogPreferencesRepository> { DogPreferencesRepository.FromStorage(get()) }
+
+    /* domain layer */
+    factory { GetDogsUseCase(get(), get()) }
+    factory { SaveDogUseCase(get(), get()) }
+    factory { RefreshDataUseCase(get()) }
+
+    /* domain layer - service */
+    factory { WorkManager.getInstance(get()) }
     factory<RetrieveDogsService> { RetrieveDogsService.FromWorker(get()) }
     worker { RetrieveDogsWorker(get(), androidContext(), get()) }
-    viewModel { DogListViewModel(get()) }
+
+    /* ui layer */
+    viewModel { DogListViewModel(get(), get(), get()) }
 }

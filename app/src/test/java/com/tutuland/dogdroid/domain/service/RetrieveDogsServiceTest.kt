@@ -1,4 +1,4 @@
-package com.tutuland.dogdroid.data.service
+package com.tutuland.dogdroid.domain.service
 
 import androidx.work.OneTimeWorkRequest
 import androidx.work.Operation

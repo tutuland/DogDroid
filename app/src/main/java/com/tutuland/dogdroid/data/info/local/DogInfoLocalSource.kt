@@ -1,32 +1,32 @@
-package com.tutuland.dogdroid.data.source.local
+package com.tutuland.dogdroid.data.info.local
 
 import android.util.Log
-import com.tutuland.dogdroid.data.Dog
+import com.tutuland.dogdroid.data.info.DogInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 private const val TAG = "DogLocalSource"
 
-interface DogLocalSource {
-    fun getDogs(): Flow<List<Dog>>
-    suspend fun saveDog(dog: Dog)
+interface DogInfoLocalSource {
+    fun getDogs(): Flow<List<DogInfo>>
+    suspend fun saveDog(dog: DogInfo)
     suspend fun deleteDogs()
 
     class FromDatabase(
-        private val database: DogDatabase,
-    ) : DogLocalSource {
-        override fun getDogs(): Flow<List<Dog>> {
+        private val database: DogInfoDatabase,
+    ) : DogInfoLocalSource {
+        override fun getDogs(): Flow<List<DogInfo>> {
             Log.d(TAG, "Getting dogs from the db")
             return database.getDogs()
                 .map(::processDogEntities)
         }
 
-        override suspend fun saveDog(dog: Dog) =
+        override suspend fun saveDog(dog: DogInfo) =
             database.saveDogs(
-                DogEntity(
+                DogInfoEntity(
                     breed = dog.breed,
                     imageUrl = dog.imageUrl,
-                    isFavorite = dog.isFavorite,
+                    modifiedAt = System.currentTimeMillis(),
                 )
             )
 
@@ -35,12 +35,11 @@ interface DogLocalSource {
             database.deleteDogs()
         }
 
-        private fun processDogEntities(list: List<DogEntity>): List<Dog> =
+        private fun processDogEntities(list: List<DogInfoEntity>): List<DogInfo> =
             list.map { entity ->
-                Dog(
+                DogInfo(
                     breed = entity.breed,
                     imageUrl = entity.imageUrl,
-                    isFavorite = entity.isFavorite,
                 )
             }
     }

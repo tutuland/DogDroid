@@ -1,4 +1,4 @@
-package com.tutuland.dogdroid.data.source.local
+package com.tutuland.dogdroid.data.info.local
 
 import android.content.Context
 import androidx.room.Dao
@@ -12,33 +12,33 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.flow.Flow
 
-typealias DogDatabase = DogDao
+typealias DogInfoDatabase = DogInfoDao
 
-fun makeDogDatabase(context: Context): DogRoomDatabase = Room
-    .databaseBuilder(context, DogRoomDatabase::class.java, "DogDatabase")
+fun makeDogInfoDatabase(context: Context): DogRoomDatabase = Room
+    .databaseBuilder(context, DogRoomDatabase::class.java, "DogInfoDatabase")
     .fallbackToDestructiveMigration()
     .build()
 
-@Database(entities = [DogEntity::class], version = 1)
+@Database(entities = [DogInfoEntity::class], version = 1)
 abstract class DogRoomDatabase : RoomDatabase() {
-    abstract fun dogDao(): DogDao
+    abstract fun dogDao(): DogInfoDao
 }
 
 @Dao
-interface DogDao {
-    @Query("SELECT * FROM DogEntity ORDER BY breed ASC")
-    fun getDogs(): Flow<List<DogEntity>>
+interface DogInfoDao {
+    @Query("SELECT * FROM DogInfoEntity ORDER BY breed ASC")
+    fun getDogs(): Flow<List<DogInfoEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveDogs(vararg dogs: DogEntity)
+    suspend fun saveDogs(vararg dogs: DogInfoEntity)
 
-    @Query("DELETE FROM DogEntity")
+    @Query("DELETE FROM DogInfoEntity")
     suspend fun deleteDogs()
 }
 
 @Entity
-data class DogEntity(
+data class DogInfoEntity(
     @PrimaryKey val breed: String,
     val imageUrl: String,
-    val isFavorite: Boolean,
+    val modifiedAt: Long,
 )

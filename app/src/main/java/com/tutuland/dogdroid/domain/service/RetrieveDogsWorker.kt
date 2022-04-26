@@ -1,17 +1,17 @@
-package com.tutuland.dogdroid.data.service
+package com.tutuland.dogdroid.domain.service
 
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.tutuland.dogdroid.data.DogRepository
+import com.tutuland.dogdroid.data.info.DogInfoRepository
 
 class RetrieveDogsWorker(
-    private val repository: DogRepository,
+    private val infoRepository: DogInfoRepository,
     context: Context,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result = try {
-        repository.refreshData()
+        infoRepository.refreshData()
         Result.success()
     } catch (error: Throwable) {
         Result.failure()
